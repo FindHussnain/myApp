@@ -38,3 +38,24 @@ $navbar-default-bg: black;
  list-style: none;
  padding-left: 0;
 }
+#page-content {
+  flex: 1 0 auto;
+  background-color: lightgrey;
+}
+.jumbotron {
+    background-image: asset-url('home-jumbotron1.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 424px;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+}

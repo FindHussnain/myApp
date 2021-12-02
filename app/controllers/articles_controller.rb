@@ -1,5 +1,6 @@
 class ArticlesController < ApplicationController
 	before_action :set_article, only: [:edit, :show, :update, :destroy]
+	before_action :check_user, only:[:new, :edit, :update, :destroy]
 	def new
 		@article = Article.new
 	end
@@ -7,7 +8,7 @@ class ArticlesController < ApplicationController
 	def create
 		# render plain: params[:article][:title]
 		@article = Article.new(article_params)
-		@article.user = User.first
+		@article.user = current_user
 		if @article.save
 			flash[:success] = "Article was successfully created!"
 			redirect_to article_path(@article)
@@ -20,7 +21,6 @@ class ArticlesController < ApplicationController
 	end
 	
 	def edit
-		@article = Article.find(params[:id])
 	end
 
 	def update
@@ -34,10 +34,12 @@ class ArticlesController < ApplicationController
 	end
 
 	def index
-		@articles = Article.all
+		@articles = Article.paginate(page: params[:page], per_page: 5)
 	end
 
 	def destroy
+		byebug
+		@article = Article.find(params[:id])
 		@article.destroy
 		flash[:success] = "Article was deleted"
 		redirect_to articles_path
@@ -49,5 +51,11 @@ class ArticlesController < ApplicationController
 		end
 		def set_article
 			@article = Article.find(params[:id])
+		end
+		def check_user
+			if !logged_in?
+				flash[:danger] = "You are not elligible for this action sighnin first!"
+				redirect_to articles_path
+			end
 		end
 end
