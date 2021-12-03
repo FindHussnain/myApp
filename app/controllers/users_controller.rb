@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 	end
 	def destroy
 		@user = User.find(params[:id])
-		if current_user.role == 'admin'
+		if current_user.has_role?(:admin) || current_user == @user
 			@user.destroy
 		else
 			flash[:danger] = "You are not elligible for this"
@@ -42,11 +42,11 @@ class UsersController < ApplicationController
 	end
 private
 	def user_params
-		params.require(:user).permit(:username, :email, :password)
+		params.require(:user).permit(:username, :email, :password, {role_ids: []})
 	end
 	def check_user
 		@user =User.find(params[:id])
-		if !logged_in? || @user != current_user
+		if !logged_in? || @user != current_user && !current_user.has_role?(:admin)
 			flash[:danger] = "You are no eligible"
 			redirect_to users_path
 		end

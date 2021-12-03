@@ -38,7 +38,6 @@ class ArticlesController < ApplicationController
 	end
 
 	def destroy
-		byebug
 		@article = Article.find(params[:id])
 		@article.destroy
 		flash[:success] = "Article was deleted"
@@ -53,8 +52,8 @@ class ArticlesController < ApplicationController
 			@article = Article.find(params[:id])
 		end
 		def check_user
-			if !logged_in?
-				flash[:danger] = "You are not elligible for this action sighnin first!"
+			if !logged_in? || !current_user.has_role?(:editor || :admin)
+				flash[:danger] = "You are not elligible for this action, signin first!"
 				redirect_to articles_path
 			end
 		end

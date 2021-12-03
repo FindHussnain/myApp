@@ -26,7 +26,17 @@
    <div class="col-sm-8">
     <%= f.password_field :password, class: "form-control", placeholder: "Enter password" %>
    </div>
-  </div>  
+  </div>
+  <% if logged_in? && current_user.has_role?(:admin)%>
+    <div class="form-group">
+     <div class="control-label col-sm-2">
+      <%= f.label :role %>
+     </div>
+     <div class="col-sm-8">
+        <%= f.collection_check_boxes :role_ids, Role.all, :id, :name%>
+     </div>
+    </div>
+  <% end %>
   <div class="form-group">
    <div class="col-sm-offset-2 col-sm-10">
     <%= f.submit(@user.new_record?  ? "Sign up" : "Update account", class: 'btn btn-success btn-large') %>
