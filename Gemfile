@@ -28,7 +28,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap-sass', '~> 3.4', '>= 3.4.1'
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
 gem 'jquery-rails'
-gem 'will_paginate', '~> 3.3', '>= 3.3.1'
+# gem 'will_paginate', '~> 3.3', '>= 3.3.1'
+gem 'pagy', '~> 5.6', '>= 5.6.3'
 gem 'bootstrap-will_paginate', '~> 1.0'
 gem 'rolify', '~> 6.0'
 group :development, :test do

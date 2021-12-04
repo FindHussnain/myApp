@@ -1,10 +1,11 @@
 class ArticlesController < ApplicationController
 	before_action :set_article, only: [:edit, :show, :update, :destroy]
-	before_action :check_user, only:[:new, :edit, :update, :destroy]
+	before_action :authenticate_user, only:[:new, :edit, :update, :destroy]
+
 	def new
 		@article = Article.new
 	end
-	
+
 	def create
 		# render plain: params[:article][:title]
 		@article = Article.new(article_params)
@@ -17,11 +18,9 @@ class ArticlesController < ApplicationController
 		end
 	end
 
-	def show
-	end
-	
-	def edit
-	end
+	def show; end
+
+	def edit; end
 
 	def update
 		if @article.update(article_params)
@@ -34,7 +33,7 @@ class ArticlesController < ApplicationController
 	end
 
 	def index
-		@articles = Article.paginate(page: params[:page], per_page: 5)
+		@pagy, @articles = pagy(Article.all, items: 10)
 	end
 
 	def destroy
@@ -45,16 +44,19 @@ class ArticlesController < ApplicationController
 	end
 
 	private
-		def article_params
-			params.require(:article).permit(:title, :description, :user_id)
+
+	def article_params
+		params.require(:article).permit(:title, :description, :user_id)
+	end
+
+	def set_article
+		@article = Article.find(params[:id])
+	end
+
+	def authenticate_user
+		if !logged_in? || current_user.has_role?(:visitor) || (current_user != @article.user && !current_user.has_role?(:admin))
+			flash[:danger] = "You are not elligible for this action, signin first!"
+			redirect_to articles_path
 		end
-		def set_article
-			@article = Article.find(params[:id])
-		end
-		def check_user
-			if !logged_in? || !current_user.has_role?(:editor || :admin)
-				flash[:danger] = "You are not elligible for this action, signin first!"
-				redirect_to articles_path
-			end
-		end
+	end
 end
