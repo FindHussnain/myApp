@@ -30,7 +30,6 @@ gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
 gem 'jquery-rails'
 # gem 'will_paginate', '~> 3.3', '>= 3.3.1'
 gem 'pagy', '~> 5.6', '>= 5.6.3'
-gem 'bootstrap-will_paginate', '~> 1.0'
 gem 'rolify', '~> 6.0'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

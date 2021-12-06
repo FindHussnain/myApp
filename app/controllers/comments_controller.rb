@@ -1,17 +1,15 @@
 class CommentsController < ApplicationController
+  before_action :set_article, only: [:index, :edit, :update, :create ]
 
   def index
-    @article = Article.find(params[:article_id])
     @comments = @article.comments
   end
 
   def edit
-    @article = Article.find(params[:article_id])
     @comment = Comment.find(params[:id])
   end
 
   def update
-    @article = Article.find(params[:article_id])
     @comment = Comment.find(params[:id])
     if @comment.update(comment_params)
       flash[:success] = "Comment updated successfully"
@@ -22,7 +20,6 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @article = Article.find(params[:article_id])
     @comment = @article.comments.create(comment_params)
     @comment.user = current_user
     if @comment.save
@@ -44,7 +41,12 @@ class CommentsController < ApplicationController
   end
 
   private
+
     def comment_params
       params.require(:comment).permit(:body)
+    end
+
+    def set_article
+      @article = Article.find(params[:article_id])
     end
 end
