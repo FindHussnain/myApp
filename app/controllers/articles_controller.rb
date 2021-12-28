@@ -8,13 +8,12 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    # render plain: params[:article][:title]
-    @article = Article.new(article_params)
-    @article.user = current_user
+    @article = current_user.articles.new(article_params)
     if @article.save
-      flash[:success] = "Article was successfully created!"
+      flash[:notice] = "Article was successfully created!"
       redirect_to article_path(@article)
     else
+      flash[:alert] = @article.errors.full_messages
       render 'new'
     end
   end
@@ -28,22 +27,22 @@ class ArticlesController < ApplicationController
 
   def update
     if @article.update(article_params)
-      flash[:success] = "Article was updated!"
+      flash[:notice] = "Article was updated!"
       redirect_to article_path(@article)
     else
-      flash[:danger] = "Article was not updated"
+      flash[:danger] = @article.errors.full_messages
       render 'edit'
     end
   end
 
   def index
-    @pagy, @articles = pagy(Article.all, items: 10)
+    @pagy, @articles = pagy(Article.all)
   end
 
   def destroy
     @article = Article.find(params[:id])
     @article.destroy
-    flash[:success] = "Article was deleted"
+    flash[:notice] = "Article was deleted"
     redirect_to articles_path
   end
 
@@ -59,14 +58,14 @@ class ArticlesController < ApplicationController
 
   def authenticate_user
     if !logged_in?
-      flash[:danger] = "You are not elligible for this action, signin first!"
+      flash[:notice] = "You are not elligible for this action, signin first!"
       redirect_to articles_path
     end
   end
 
   def authorize_user
     if @article.user != current_user && !current_user.admin?
-      flash[:danger] = "You are elligible, signin with authrize account"
+      flash[:alert] = "You are elligible, signin with authrize account"
       redirect_to articles_path
     end
   end

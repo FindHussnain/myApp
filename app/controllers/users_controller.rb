@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:destroy, :show, :update]
   before_action :authenticate_user, only: [:edit, :update, :destroy]
   before_action :authorize_user, only: [:destroy, :edit, :update]
+
   def new
     @user = User.new
   end
@@ -9,10 +10,11 @@ class UsersController < ApplicationController
   def create
     @user =User.new(user_params)
     if @user.save
-      flash[:success] = "Welcome to the alpha blog #{@user.username}"
+      flash[:notice] = "Welcome to the alpha blog #{@user.username}"
       session[:user_id] = @user.id
       redirect_to articles_path
     else
+      flash[:alert] = @user.errors.full_messages
       render 'new'
     end
   end
@@ -21,27 +23,27 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      flash[:success] = "Your account was updated successfully"
+      flash[:notice] = "Your account was updated successfully"
       redirect_to articles_path
     else
+      flash[:alert] = @user.errors.full_messages
       render 'edit'
     end
   end
 
   def show
-    @user_articles = @user.articles.paginate(page: params[:page], per_page: 5)
+    @pagy, @user_articles = pagy(Article.all, items: 5)
   end
 
   def index
-    # @users = User.paginate(page: params[:page], per_page: 5)
-    @pagy, @users = pagy(User.all, items: 5)
+    @pagy, @users = pagy(User.all)
   end
 
   def destroy
     if current_user.has_role?(:admin) || current_user == @user
       @user.destroy
     else
-      flash[:danger] = "You are not elligible for this"
+      flash[:alert] = "You are not elligible for this"
     end
   end
 
@@ -54,14 +56,14 @@ class UsersController < ApplicationController
   def authenticate_user
     @user = User.find(params[:id])
     if !logged_in?
-      flash[:danger] = "You are no eligible"
+      flash[:alert] = "You are no eligible"
       redirect_to users_path
     end
   end
 
   def authorize_user
     if  @user != current_user && !current_user.admin?
-      flash[:danger] = "you are not eligible 1"
+      flash[:alert] = "you are not eligible"
       redirect_to users_path
     end
   end

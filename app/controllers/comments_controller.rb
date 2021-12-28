@@ -1,20 +1,20 @@
 class CommentsController < ApplicationController
   before_action :set_article, only: [:index, :edit, :update, :create ]
+  before_action :set_comment, only: [:edit, :update, :destroy]
 
   def index
     @comments = @article.comments
   end
 
   def edit
-    @comment = Comment.find(params[:id])
   end
 
   def update
-    @comment = Comment.find(params[:id])
     if @comment.update(comment_params)
-      flash[:success] = "Comment updated successfully"
+      flash[:notice] = "Comment updated successfully"
       redirect_to article_path(@article)
     else
+      flash[:alert] = @comment.errors.full_messages
       render :edit
     end
   end
@@ -25,6 +25,7 @@ class CommentsController < ApplicationController
     if @comment.save
       redirect_to article_path(@article)
     else
+      flash[:alert] = @comment.errors.full_messages
       redirect_to @article
     end
   end
@@ -34,7 +35,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
     if @comment.destroy
       redirect_to article_path(Article.find(params[:article_id]))
     end
@@ -48,5 +48,9 @@ class CommentsController < ApplicationController
 
     def set_article
       @article = Article.find(params[:article_id])
+    end
+
+    def set_comment
+      @comment = Comment.find(params[:id])
     end
 end

@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   rolify
   after_create :assign_default_role
-  enum role: [:user, :admin]
   has_many :articles, dependent: :destroy
   has_many :comments, dependent: :destroy
   validates :username, presence: true, uniqueness: true, length: { minimum: 3, maxmum: 25 }
