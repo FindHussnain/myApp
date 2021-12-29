@@ -1,7 +1,10 @@
 class CommentsController < ApplicationController
   before_action :set_article, only: [:index, :edit, :update, :create ]
   before_action :set_comment, only: [:edit, :update, :destroy]
-
+  before_action :authenticate_user, only: [:edit, :update, :destroy, :new, :create]
+  before_action only: [:edit, :update, :destroy] do
+    authorize_user(@comment.user)
+  end
   def index
     @comments = @article.comments
   end

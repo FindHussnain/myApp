@@ -7,14 +7,13 @@ module ApplicationHelper
     gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
     image_tag(gravatar_url, alt: user.username, class: "img-circle")
   end
+
   def bootstrap_class_for(flash_type)
     case flash_type.to_sym
     when :alert
       'alert-danger'
     when :notice
       'alert-success'
-    when :recaptcha_error
-      'alert-danger'
     else
       flash_type.to_s
     end

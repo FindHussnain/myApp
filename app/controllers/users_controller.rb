@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:destroy, :show, :update]
+  before_action :set_user, only: [:edit, :destroy, :show, :update]
   before_action :authenticate_user, only: [:edit, :update, :destroy]
-  before_action :authorize_user, only: [:destroy, :edit, :update]
+  before_action only: [:destroy, :edit, :update] do
+    authorize_user(@user)
+  end
 
   def new
     @user = User.new
@@ -10,7 +12,7 @@ class UsersController < ApplicationController
   def create
     @user =User.new(user_params)
     if @user.save
-      flash[:notice] = "Welcome to the alpha blog #{@user.username}"
+      flash[:notice] = "Welcome to the Twitter Lite #{@user.username}"
       session[:user_id] = @user.id
       redirect_to articles_path
     else
@@ -32,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @pagy, @user_articles = pagy(Article.all, items: 5)
+    @pagy, @user_articles = pagy(Article.all)
   end
 
   def index
@@ -51,21 +53,6 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:username, :email, :password, {role_ids: []})
-  end
-
-  def authenticate_user
-    @user = User.find(params[:id])
-    if !logged_in?
-      flash[:alert] = "You are no eligible"
-      redirect_to users_path
-    end
-  end
-
-  def authorize_user
-    if  @user != current_user && !current_user.admin?
-      flash[:alert] = "you are not eligible"
-      redirect_to users_path
-    end
   end
 
   def set_user

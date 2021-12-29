@@ -1,7 +1,9 @@
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:edit, :show, :update, :destroy]
   before_action :authenticate_user, only:[:new, :create, :edit, :update, :destroy]
-  before_action :authorize_user, only: [:edit, :update, :destroy]
+  before_action only: [:edit, :update, :destroy] do
+    authorize_user(@article.user)
+  end
 
   def new
     @article = Article.new
@@ -54,19 +56,5 @@ class ArticlesController < ApplicationController
 
   def set_article
     @article = Article.find(params[:id])
-  end
-
-  def authenticate_user
-    if !logged_in?
-      flash[:notice] = "You are not elligible for this action, signin first!"
-      redirect_to articles_path
-    end
-  end
-
-  def authorize_user
-    if @article.user != current_user && !current_user.admin?
-      flash[:alert] = "You are elligible, signin with authrize account"
-      redirect_to articles_path
-    end
   end
 end
