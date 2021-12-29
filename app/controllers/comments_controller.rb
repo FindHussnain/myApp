@@ -5,12 +5,12 @@ class CommentsController < ApplicationController
   before_action only: [:edit, :update, :destroy] do
     authorize_user(@comment.user)
   end
+
   def index
     @comments = @article.comments
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @comment.update(comment_params)

@@ -1,6 +1,7 @@
 $navbar-default-bg: black;
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
 #logo {
  float: left;
  font-size: 1.7em;
@@ -9,14 +10,17 @@ $navbar-default-bg: black;
  letter-spacing: -1px;
  font-weight: bold;
 }
+
 #logo:hover {
  color: #fff;
  text-decoration: none;
 }
+
 .article-actions {
  border-top: 1px solid #eaeaea;
  padding-top: 5px;
 }
+
 .article-title {
  font-weight: bold;
  font-size: 1.5em;
@@ -27,21 +31,26 @@ $navbar-default-bg: black;
  padding-top: 15px;
  padding-bottom: 15px;
 }
+
 .article-meta-details {
  border-top: 1px solid #eaeaea;
  margin-top: 15px;
 }
+
 .description {
  margin-top: 0;
 }
+
 .listing {
  list-style: none;
  padding-left: 0;
 }
+
 #page-content {
   flex: 1 0 auto;
   background-color: lightgrey;
 }
+
 .jumbotron {
     background-image: asset-url('home-jumbotron1.jpg');
     background-position: center center;
