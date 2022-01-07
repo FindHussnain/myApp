@@ -14,3 +14,4 @@ ActiveStorage.start()
 @import 'bootstrap/dist/css/bootstrap';
 //= require jquery
 //= require bootstrap-sprockets
+//= require jquery_ujs

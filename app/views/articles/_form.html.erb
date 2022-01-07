@@ -1,4 +1,3 @@
-<%= render 'shared/errors', obj: @article%>
 <div class="row">
  <div class="col-xs-12">
   <%= form_for(@article, :html => {class: "form-horizontal", role: "form"}) do |f| %>
@@ -20,7 +19,8 @@
   </div>
   <div class="form-group">
    <div class="col-sm-offset-2 col-sm-10">
-    <%= f.submit class: 'btn btn-primary btn-large' %>
+    <%= f.submit class: 'btn btn-success btn-large' %> | 
+    <%= link_to 'Back', articles_path , class: 'btn btn-warning btn-large'%>
    </div>
   </div>
 <% end %>
