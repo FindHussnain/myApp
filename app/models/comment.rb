@@ -2,7 +2,6 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :article
   validates :body, presence: true
-
   after_commit :create_notifications, on: :create
 
   private
