@@ -11,12 +11,13 @@ class ArticlesController < ApplicationController
 
   def create
     @article = current_user.articles.new(article_params)
-    if @article.save
-      flash[:notice] = "Article was successfully created!"
-      redirect_to article_path(@article)
-    else
-      flash[:alert] = @article.errors.full_messages
-      render 'new'
+    respond_to do |format|
+      if @article.save
+        format.html { redirect_to article_path(@article), notice: "Article was successfully created!" }
+      else
+        flash[:alert] = @article.errors.full_messages
+        format.html { render 'new', status: :unprocessable_entity }
+      end
     end
   end
 
@@ -28,12 +29,13 @@ class ArticlesController < ApplicationController
   def edit; end
 
   def update
-    if @article.update(article_params)
-      flash[:notice] = "Article was updated!"
-      redirect_to article_path(@article)
-    else
-      flash[:danger] = @article.errors.full_messages
-      render 'edit'
+    respond_to do |format|
+      if @article.update(article_params)
+        format.html { redirect_to article_path(@article), notice: "Article was updated!" }
+      else
+        flash[:alert] = @article.errors.full_messages
+        format.html { render 'edit', status: :unprocessable_entity }
+      end
     end
   end
 
@@ -42,9 +44,10 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    @article.destroy
-    flash[:notice] = "Article was deleted"
-    redirect_to articles_path
+    respond_to do |format|
+      @article.destroy
+      format.html { redirect_to articles_path, notice: "Article was deleted" }
+    end
   end
 
   private

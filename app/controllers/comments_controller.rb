@@ -13,23 +13,25 @@ class CommentsController < ApplicationController
   def edit; end
 
   def update
-    if @comment.update(comment_params)
-      flash[:notice] = "Comment updated successfully"
-      redirect_to article_path(@article)
-    else
-      flash[:alert] = @comment.errors.full_messages
-      render :edit
+    respond_to do |format|
+      if @comment.update(comment_params)
+        format.html { redirect_to article_path(@article), notice: "Comment updated successfully" }
+      else
+        flash[:alert] = @comment.errors.full_messages
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def create
     @comment = @article.comments.create(comment_params)
     @comment.user = current_user
-    if @comment.save
-      redirect_to article_path(@article)
-    else
-      flash[:alert] = @comment.errors.full_messages
-      redirect_to @article
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to article_path(@article) }
+      else
+        format.html { redirect_to @article, alert: @comment.errors.full_messages }
+      end
     end
   end
 
@@ -38,8 +40,10 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    if @comment.destroy
-      redirect_to article_path(Article.find(params[:article_id]))
+    respond_to do |format|
+      if @comment.destroy
+        format.html { redirect_to article_path(Article.find(params[:article_id])) }
+      end
     end
   end
 

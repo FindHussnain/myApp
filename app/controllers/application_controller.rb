@@ -14,22 +14,25 @@ class ApplicationController < ActionController::Base
 
   def require_user
     if !logged_in?
-      flash[:alert] = "You must be logged in to perform that action"
-      redirect_to root_path
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "You must be logged in to perform that action" }
+      end
     end
   end
 
   def authenticate_user
     if !logged_in?
-      flash[:alert] = "You are not elligible for this action, signin first!"
-      redirect_to login_path
+      respond_to do |format|
+        format.html { redirect_to login_path, alert: "You are not elligible for this action, signin first!" }
+      end
     end
   end
 
   def authorize_user(user)
     if user != current_user && !current_user.admin?
-      flash[:alert] = "You are elligible, signin with authrize account"
-      redirect_to articles_path
+      respond_to do |format|
+        format.html { redirect_to articles_path, alert: "You are elligible, signin with authorize account" }
+      end
     end
   end
 end
