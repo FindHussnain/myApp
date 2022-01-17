@@ -3,7 +3,7 @@ class Comment < ApplicationRecord
   belongs_to :article
   validates :body, presence: true
   after_commit :create_notifications, on: :create
-
+  broadcasts_to :article
   private
     def create_notifications
       Notification.create do |notification|
