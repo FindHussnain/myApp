@@ -10,26 +10,30 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user =User.new(user_params)
-    if @user.save
-      flash[:notice] = "Welcome to the Twitter Lite #{@user.username}"
-      session[:user_id] = @user.id
-      redirect_to articles_path
-    else
-      flash[:alert] = @user.errors.full_messages
-      render 'new'
+    @user = User.new(user_params)
+    respond_to do |format|
+      if @user.save
+        flash[:notice] = "Welcome to the Twitter Lite #{@user.username}"
+        session[:user_id] = @user.id
+        format.html { redirect_to articles_path }
+      else
+        flash[:alert] = @user.errors.full_messages
+        format.html { render 'new', status: :unprocessable_entity }
+      end
     end
   end
 
   def edit; end
 
   def update
-    if @user.update(user_params)
-      flash[:notice] = "Your account was updated successfully"
-      redirect_to articles_path
-    else
-      flash[:alert] = @user.errors.full_messages
-      render 'edit'
+    respond_to do |format|
+      if @user.update(user_params)
+        flash[:notice] = "Your account was updated successfully"
+        format.html { redirect_to articles_path }
+      else
+        flash[:alert] = @user.errors.full_messages
+        format.html { render 'edit', status: :unprocessable_entity }
+      end
     end
   end
 
